@@ -32,6 +32,9 @@ export class WordleComponent {
   // One try is one row in the UI.
   readonly tries: Try[] = [];
 
+  // Tracks the current letter index.
+  private currentLetterIndex = 0;
+
   constructor() {
     // Populate initial state of "tries".
     for(let i = 0; i < NUMBER_OF_TRIES; i++) {
@@ -49,6 +52,16 @@ export class WordleComponent {
   }
 
   private handleClickKey(key: string) {
+    // If key is a letter, update the text in the corresponding letter object.
+    if(LETTERS[key.toLowerCase()]) {
+      this.setLetter(key);
+      this.currentLetterIndex++;
+    }
+  }
 
+  private setLetter(letter: string) {
+    const tryIndex = Math.floor(this.currentLetterIndex / WORD_LENGTH);
+    const letterIndex = this.currentLetterIndex - tryIndex * WORD_LENGTH;
+    this.tries[tryIndex].letters[letterIndex].text = letter;
   }
 }
