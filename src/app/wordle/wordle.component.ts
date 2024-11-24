@@ -35,6 +35,9 @@ export class WordleComponent {
   // Tracks the current letter index.
   private currentLetterIndex = 0;
 
+  // Tracks the number of submitted tries.
+  private numberSubmittedTries = 0;
+
   constructor() {
     // Populate initial state of "tries".
     for(let i = 0; i < NUMBER_OF_TRIES; i++) {
@@ -54,8 +57,12 @@ export class WordleComponent {
   private handleClickKey(key: string) {
     // If key is a letter, update the text in the corresponding letter object.
     if(LETTERS[key.toLowerCase()]) {
-      this.setLetter(key);
-      this.currentLetterIndex++;
+      // Only allow typing letters in the current try.
+      // Don't go over if the current try has not been submitted.
+      if(this.currentLetterIndex < (this.numberSubmittedTries + 1) * WORD_LENGTH) {
+        this.setLetter(key);
+        this.currentLetterIndex++;
+      }
     }
   }
 
