@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Try } from '../try';
 import { Letter } from '../letter';
 import { LetterState } from '../letter-state';
@@ -8,7 +9,7 @@ const NUMBER_OF_TRIES = 6;
 
 @Component({
   selector: 'app-wordle',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './wordle.component.html',
   styleUrl: './wordle.component.scss'
 })
