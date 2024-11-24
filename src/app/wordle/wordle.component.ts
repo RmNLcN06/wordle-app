@@ -64,6 +64,14 @@ export class WordleComponent {
         this.currentLetterIndex++;
       }
     }
+    // Handle delete.
+    else if(key === 'Backspace') {
+      // Don't delete previous try.
+      if(this.currentLetterIndex > this.numberSubmittedTries * WORD_LENGTH) {
+        this.currentLetterIndex--;
+        this.setLetter('');
+      }
+    }
   }
 
   private setLetter(letter: string) {
