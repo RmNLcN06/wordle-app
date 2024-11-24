@@ -1,11 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Try } from '../try';
 import { Letter } from '../letter';
 import { LetterState } from '../letter-state';
 
+// Length of the word.
 const WORD_LENGTH = 5;
+
+// Number of tries.
 const NUMBER_OF_TRIES = 6;
+
+// Letter mapping.
+const LETTERS = (() => {
+  // letter -> true. Easier to check.
+  const response: {[key: string]: boolean} = {};
+  for(let charCode = 97; charCode < 97 + 26; charCode++) {
+    response[String.fromCharCode(charCode)] = true;
+  }
+  //console.log(response);
+  return response;
+})();
 
 @Component({
   selector: 'app-wordle',
@@ -27,5 +41,14 @@ export class WordleComponent {
       }
       this.tries.push({letters});
     }
+  }
+
+  @HostListener('document: keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.handleClickKey(event.key);
+  }
+
+  private handleClickKey(key: string) {
+
   }
 }
