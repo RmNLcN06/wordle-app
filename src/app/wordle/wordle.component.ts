@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Try } from '../try';
 import { Letter } from '../letter';
 import { LetterState } from '../letter-state';
+import { WORDS } from '../words';
 
 // Length of the word.
 const WORD_LENGTH = 5;
@@ -44,6 +45,9 @@ export class WordleComponent {
   // Tracks the number of submitted tries.
   private numberSubmittedTries = 0;
 
+  // Store the target word.
+  private targetWord = '';
+
   constructor() {
     // Populate initial state of "tries".
     for(let i = 0; i < NUMBER_OF_TRIES; i++) {
@@ -53,6 +57,19 @@ export class WordleComponent {
       }
       this.tries.push({letters});
     }
+
+    // Get a target word from the word list.
+    const numberOfWords = WORDS.length;
+    while(true) {
+      // Randomly select a word and check if its length is WORD_LENGTH.
+      const index = Math.floor(Math.random() * numberOfWords);
+      const word = WORDS[index];
+      if(word.length === WORD_LENGTH) {
+        this.targetWord = word.toLowerCase();
+        break;
+      }
+    }
+    console.log('Target word: ' + this.targetWord);
   }
 
   @HostListener('document: keydown', ['$event'])
