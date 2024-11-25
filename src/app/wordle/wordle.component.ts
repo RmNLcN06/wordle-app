@@ -32,6 +32,12 @@ export class WordleComponent {
   // One try is one row in the UI.
   readonly tries: Try[] = [];
 
+  // Word shown in the message panel.
+  infoMessage = '';
+
+  // Controls info message's fading-out animation.
+  fadeOutInfoMessage = false;
+
   // Tracks the current letter index.
   private currentLetterIndex = 0;
 
@@ -88,8 +94,20 @@ export class WordleComponent {
     // Check if user has typed all the letters.
     const currentTry = this.tries[this.numberSubmittedTries];
     if(currentTry.letters.some(letter => letter.text === '')) {
-      console.log('Not enough letters');
+      this.showInfoMessage('Not enough letters');
       return;
     }
+  }
+
+  private showInfoMessage(message: string) {
+    this.infoMessage = message;
+    // Hide after 2 seconds.
+    setTimeout(() => {
+      this.fadeOutInfoMessage = true;
+      setTimeout(() => {
+        this.infoMessage = '';
+        this.fadeOutInfoMessage = false;
+      }, 500);
+    }, 2000);
   }
 }

@@ -17,5 +17,8 @@
     <div class="keyboard-container">
         keyboard
     </div>
+    <div class="info-message" [class.show]="infoMessage !== ''" [class.fade-out]="fadeOutInfoMessage">
+        {{infoMessage}}
+    </div>
 </div>
 
