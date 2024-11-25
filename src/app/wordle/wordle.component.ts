@@ -72,11 +72,24 @@ export class WordleComponent {
         this.setLetter('');
       }
     }
+    // Submit the current try and check.
+    else if(key === 'Enter') {
+      this.checkCurrentTry();
+    }
   }
 
   private setLetter(letter: string) {
     const tryIndex = Math.floor(this.currentLetterIndex / WORD_LENGTH);
     const letterIndex = this.currentLetterIndex - tryIndex * WORD_LENGTH;
     this.tries[tryIndex].letters[letterIndex].text = letter;
+  }
+
+  private checkCurrentTry() {
+    // Check if user has typed all the letters.
+    const currentTry = this.tries[this.numberSubmittedTries];
+    if(currentTry.letters.some(letter => letter.text === '')) {
+      console.log('Not enough letters');
+      return;
+    }
   }
 }
