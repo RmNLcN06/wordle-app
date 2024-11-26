@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Try } from '../try';
 import { Letter } from '../letter';
@@ -29,6 +29,8 @@ const LETTERS = (() => {
   styleUrl: './wordle.component.scss'
 })
 export class WordleComponent {
+  @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
+
   // Stores all tries.
   // One try is one row in the UI.
   readonly tries: Try[] = [];
@@ -119,6 +121,12 @@ export class WordleComponent {
     const wordFromCurrentTry = currentTry.letters.map(letter => letter.text).join('').toUpperCase();
     if(!WORDS.includes(wordFromCurrentTry)) {
       this.showInfoMessage('Not in word list');
+      // Shake the current row.
+      const tryContainer = this.tryContainers.get(this.numberSubmittedTries)?.nativeElement as HTMLElement;
+      tryContainer.classList.add('shake');
+      setTimeout(() => {
+        tryContainer.classList.remove('shake');
+      }, 500);
       return;
     }
   }
