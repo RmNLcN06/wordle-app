@@ -114,6 +114,13 @@ export class WordleComponent {
       this.showInfoMessage('Not enough letters');
       return;
     }
+
+    // Check if the current try is a word of the list.
+    const wordFromCurrentTry = currentTry.letters.map(letter => letter.text).join('').toUpperCase();
+    if(!WORDS.includes(wordFromCurrentTry)) {
+      this.showInfoMessage('Not in word list');
+      return;
+    }
   }
 
   private showInfoMessage(message: string) {
