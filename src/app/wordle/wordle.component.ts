@@ -54,6 +54,9 @@ export class WordleComponent {
   // Store the target word.
   private targetWord = '';
 
+  // Winning situation or not
+  private winningSituation = false;
+
   // Stores the count for each letter from the target word.
   // For example, if the target word is "avion", then this map will look like:
   // {'a': 1, 'v': 1, 'i': 1, 'o': 1, 'n': 1}
@@ -99,6 +102,11 @@ export class WordleComponent {
   }
 
   private handleClickKey(key: string) {
+    // Don't process key down when user has won the game.
+    if(this.winningSituation) {
+      return;
+    }
+
     // If key is a letter, update the text in the corresponding letter object.
     if(LETTERS[key.toLowerCase()]) {
       // Only allow typing letters in the current try.
@@ -194,6 +202,21 @@ export class WordleComponent {
       // Unfold.
       currentLetterElement.classList.remove('fold');
       await this.wait(180);
+    }
+    this.numberSubmittedTries++;
+
+    // Check if all letters in the current try are correct.
+    if(states.every(state => state === LetterState.FULL_MATCH)) {
+      this.showInfoMessage('NICE !');
+      this.winningSituation = true;
+      // Bounce animation.
+      for(let i = 0; i < letterElements.length; i++) {
+        const currentLetterElement = letterElements[i];
+        currentLetterElement.classList.add('bounce');
+        await this.wait(160);
+      }
+      // TODO: show share dialog.
+      return;
     }
   }
 
