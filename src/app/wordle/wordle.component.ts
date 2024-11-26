@@ -50,6 +50,11 @@ export class WordleComponent {
   // Store the target word.
   private targetWord = '';
 
+  // Stores the count for each letter from the target word.
+  // For example, if the target word is "avion", then this map will look like:
+  // {'a': 1, 'v': 1, 'i': 1, 'o': 1, 'n': 1}
+  private targetWordLetterCounts: {[letter: string]: number} = {};
+
   constructor() {
     // Populate initial state of "tries".
     for(let i = 0; i < NUMBER_OF_TRIES; i++) {
@@ -72,6 +77,16 @@ export class WordleComponent {
       }
     }
     console.log('Target word: ' + this.targetWord);
+
+    // Generate letter counts for target word.
+    for(const letter of this.targetWord) {
+      const count = this.targetWordLetterCounts[letter];
+      if(count == null) {
+        this.targetWordLetterCounts[letter] = 0;
+      }
+      this.targetWordLetterCounts[letter]++;
+    }
+    console.log(this.targetWordLetterCounts);
   }
 
   @HostListener('document: keydown', ['$event'])
@@ -129,6 +144,33 @@ export class WordleComponent {
       }, 500);
       return;
     }
+
+    // Check if the current try matches the target word.
+
+    // Stores the check results.
+    // Clone the counts map. Need to use it in every check with the initial values.
+    const targetWordLetterCounts = {...this.targetWordLetterCounts};
+    const states: LetterState[] = [];
+    for(let i = 0; i < WORD_LENGTH; i++) {
+      const expectedWord = this.targetWord[i];
+      const currentLetter = currentTry.letters[i];
+      const gotLetter = currentLetter.text.toLowerCase();
+      let state = LetterState.WRONG;
+
+      // Need to make sure only performs the check when the letter hasn't beenchecked before.
+      // For example, if the target word is "pomme", the first "o" user types
+      // should be checked, but the second "o" shouldn't, because there is no more "o"
+      // left in the target word that hasn't been checked.
+      if(expectedWord === gotLetter && targetWordLetterCounts[gotLetter] > 0) {
+        targetWordLetterCounts[expectedWord]--;
+        state = LetterState.FULL_MATCH;
+      } else if(this.targetWord.includes(gotLetter) && targetWordLetterCounts[gotLetter] > 0) {
+        targetWordLetterCounts[gotLetter]--;
+        state = LetterState.PARTIAL_MATCH;
+      }
+      states.push(state);
+    }
+    console.log(states);
   }
 
   private showInfoMessage(message: string) {
