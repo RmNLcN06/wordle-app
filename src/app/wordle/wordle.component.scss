@@ -54,11 +54,35 @@
                 font-size: 32px;
                 font-weight: bold;
                 text-transform: uppercase;
+                transition: transform 180ms;
 
                 &.has-text {
                     border-color: #888;
                     animation-name: letter-pop;
                     animation-duration: 120ms;
+                }
+
+                // Colors from the original Wordle game.
+                &.match {
+                    background-color: #6aaa64;
+                    border-color: #6aaa64;
+                    color: white;
+                }
+
+                &.partial {
+                    background-color: #c9b458;
+                    border-color: #c9b458;
+                    color: white;
+                }
+
+                &.wrong {
+                    background-color: #86888a;
+                    border-color: #86888a;
+                    color: white;
+                }
+
+                &.fold {
+                    transform: scaleY(0);
                 }
             }
         }

@@ -4,6 +4,7 @@ import { Try } from '../try';
 import { Letter } from '../letter';
 import { LetterState } from '../letter-state';
 import { WORDS } from '../words';
+import { resolve } from 'node:path';
 
 // Length of the word.
 const WORD_LENGTH = 5;
@@ -34,6 +35,9 @@ export class WordleComponent {
   // Stores all tries.
   // One try is one row in the UI.
   readonly tries: Try[] = [];
+
+  // This is to make LetterState enum accessible in HTML template.
+  readonly LetterState = LetterState;
 
   // Word shown in the message panel.
   infoMessage = '';
@@ -124,7 +128,7 @@ export class WordleComponent {
     this.tries[tryIndex].letters[letterIndex].text = letter;
   }
 
-  private checkCurrentTry() {
+  private async checkCurrentTry() {
     // Check if user has typed all the letters.
     const currentTry = this.tries[this.numberSubmittedTries];
     if(currentTry.letters.some(letter => letter.text === '')) {
@@ -171,6 +175,26 @@ export class WordleComponent {
       states.push(state);
     }
     console.log(states);
+
+    // Animate.
+    // Must be a more Angular way to do this ...
+
+    // Get the current try.
+    const tryContainer = this.tryContainers.get(this.numberSubmittedTries)?.nativeElement as HTMLElement;
+    // Get the letter elements.
+    const letterElements = tryContainer.querySelectorAll('.letter-container');
+    for(let i = 0; i < letterElements.length; i++) {
+      // "Fold" the letter, apply the result (and update the style), then unfold it.
+      const currentLetterElement = letterElements[i];
+      currentLetterElement.classList.add('fold');
+      // Wait for the fold animation to finish.
+      await this.wait(180);
+      // Update state. This will also update styles.
+      currentTry.letters[i].state = states[i];
+      // Unfold.
+      currentLetterElement.classList.remove('fold');
+      await this.wait(180);
+    }
   }
 
   private showInfoMessage(message: string) {
@@ -183,5 +207,13 @@ export class WordleComponent {
         this.fadeOutInfoMessage = false;
       }, 500);
     }, 2000);
+  }
+
+  private async wait(milliSeconds: number) {
+    await new Promise<void>((resolve)=>{
+      setTimeout(()=>{
+        resolve();
+      }, milliSeconds);
+    })
   }
 }
