@@ -19,7 +19,16 @@
         </div>
     </div>
     <div class="keyboard-container">
-        keyboard
+        <div [class]="['row' + i, 'row'].join(' ')" *ngFor="let row of keyboardRows; let i = index">
+            <div *ngFor="let key of row" class="key" [class.enter]="key === 'Enter'">
+                <div *ngIf="key !== 'Backspace'; else backspace">
+                    {{key}}
+                </div>
+                <ng-template #backspace>
+                    <img src="assets/backspace.svg" alt="Backspace">
+                </ng-template>
+            </div>
+        </div>
     </div>
     <div class="info-message" [class.show]="infoMessage !== ''" [class.fade-out]="fadeOutInfoMessage">
         {{infoMessage}}

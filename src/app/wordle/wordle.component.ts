@@ -39,6 +39,14 @@ export class WordleComponent {
   // This is to make LetterState enum accessible in HTML template.
   readonly LetterState = LetterState;
 
+  // Keyboard rows.
+  readonly keyboardRows = [
+    ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    ['Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M'],
+    ['W', 'X', 'C', 'V', 'B', 'N'],
+    ['Backspace', 'Enter'],
+  ];
+
   // Word shown in the message panel.
   infoMessage = '';
 

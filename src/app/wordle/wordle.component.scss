@@ -97,6 +97,44 @@
 
     .keyboard-container {
         margin-bottom: 12px;
+
+        .row {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+
+            &.row2 {
+                margin-left: 96px;
+            }
+
+            &.row3 {
+                margin-left: 178px;
+            }
+        }
+
+        .key {
+            height: 58px;
+            min-width: 42px;
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            background-color: #d3d6da;
+            font-size: 13px;
+            font-weight: bold;
+            user-select: none;
+
+            &.enter {
+                padding: 0 11px;
+                text-transform: uppercase;
+            }
+
+            &:hover {
+                background-color: #bbb;
+            }
+        }
     }
 
     .info-message {
