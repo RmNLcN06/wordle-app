@@ -218,18 +218,27 @@ export class WordleComponent {
       // TODO: show share dialog.
       return;
     }
+
+    // Running out of tries. Show correct answer.
+    if(this.numberSubmittedTries === NUMBER_OF_TRIES) {
+      // Don't hide it
+      this.showInfoMessage(this.targetWord.toUpperCase(), false);
+      // TODO: show share
+    }
   }
 
-  private showInfoMessage(message: string) {
+  private showInfoMessage(message: string, hide = true) {
     this.infoMessage = message;
-    // Hide after 2 seconds.
-    setTimeout(() => {
-      this.fadeOutInfoMessage = true;
+    if(hide) {
+      // Hide after 2 seconds.
       setTimeout(() => {
-        this.infoMessage = '';
-        this.fadeOutInfoMessage = false;
-      }, 500);
-    }, 2000);
+        this.fadeOutInfoMessage = true;
+        setTimeout(() => {
+          this.infoMessage = '';
+          this.fadeOutInfoMessage = false;
+        }, 500);
+      }, 2000);
+    }  
   }
 
   private async wait(milliSeconds: number) {
