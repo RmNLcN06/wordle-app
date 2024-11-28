@@ -8,6 +8,9 @@ export const WORDS = [
 'AVION',
 
 // B
+'BACHE',
+'BARBE',
+'BARRE',
 'BIBLE',
 'BONNE',
 
@@ -33,13 +36,17 @@ export const WORDS = [
 'IMAGE',
 
 // J
+'JARRE',
+'JUPES',
 
 // K
+'KOALA',
 
 // L
 'LIVRE',
 
 // M
+'MAGIE',
 'MAINS',
 
 // N

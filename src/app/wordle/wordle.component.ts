@@ -56,6 +56,9 @@ export class WordleComponent {
   // Controls info message's fading-out animation.
   fadeOutInfoMessage = false;
 
+  showShareDialogContainer = false;
+  showShareDialog = false;
+
   // Tracks the current letter index.
   private currentLetterIndex = 0;
 
@@ -154,6 +157,36 @@ export class WordleComponent {
     else if(key === 'Enter') {
       this.checkCurrentTry();
     }
+  }
+
+  handleClickShare() {
+    // 🟩 🟨 ⬜
+    // Copy results into clipboard.
+    let clipboardContent = '';
+    for(let i = 0; i < this.numberSubmittedTries; i++) {
+      for(let j = 0; j < WORD_LENGTH; j++) {
+        const letter = this.tries[i].letters[j];
+        switch(letter.state) {
+          case LetterState.FULL_MATCH:
+            clipboardContent+='🟩';
+            break;
+          case LetterState.PARTIAL_MATCH:
+            clipboardContent+='🟨';
+            break;
+          case LetterState.WRONG:
+            clipboardContent+='⬜';
+            break;
+          default:
+            break;
+        }
+      }
+      clipboardContent += '\n';
+    }
+    console.log(clipboardContent);
+    navigator.clipboard.writeText(clipboardContent);
+    this.showShareDialogContainer = false;
+    this.showShareDialog = false;
+    this.showInfoMessage('Copied results to clipboard');
   }
 
   private setLetter(letter: string) {
@@ -257,7 +290,7 @@ export class WordleComponent {
         currentLetterElement.classList.add('bounce');
         await this.wait(160);
       }
-      // TODO: show share dialog.
+      this.showShare();
       return;
     }
 
@@ -265,7 +298,7 @@ export class WordleComponent {
     if(this.numberSubmittedTries === NUMBER_OF_TRIES) {
       // Don't hide it
       this.showInfoMessage(this.targetWord.toUpperCase(), false);
-      // TODO: show share
+      this.showShare();
     }
   }
 
@@ -289,5 +322,16 @@ export class WordleComponent {
         resolve();
       }, milliSeconds);
     })
+  }
+
+  private showShare() {
+    setTimeout(()=>{
+      this.showShareDialogContainer = true;
+      // Wait a tick till dialog container is displayed.
+      setTimeout(() => {
+        // Slide in the share dialog.
+        this.showShareDialog = true;
+      });
+    }, 1500);
   }
 }
