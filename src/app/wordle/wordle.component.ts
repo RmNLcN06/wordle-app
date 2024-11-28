@@ -47,6 +47,9 @@ export class WordleComponent {
     ['Backspace', 'Enter'],
   ];
 
+  // Stores the state for the keyboard key indexed by keys.
+  readonly currentLetterStates: {[key: string]: LetterState} = {};
+
   // Word shown in the message panel.
   infoMessage = '';
 
@@ -109,7 +112,22 @@ export class WordleComponent {
     this.handleClickKey(event.key);
   }
 
-  private handleClickKey(key: string) {
+  // Returns the classes for the given keyboard key based on its state.
+  getKeyClass(key: string): string {
+    const state = this.currentLetterStates[key.toLowerCase()];
+    switch(state) {
+      case LetterState.FULL_MATCH:
+          return 'full match key';
+        case LetterState.PARTIAL_MATCH:
+          return 'partial match key';
+        case LetterState.WRONG:
+          return 'wrong key';
+        default:
+          return 'key';
+    }
+  }
+
+  handleClickKey(key: string) {
     // Don't process key down when user has won the game.
     if(this.winningSituation) {
       return;
@@ -210,6 +228,22 @@ export class WordleComponent {
       // Unfold.
       currentLetterElement.classList.remove('fold');
       await this.wait(180);
+    }
+
+    // Save to keyboard key states.
+    // Do this after the current try has been submitted and the animation above is done.
+    for(let i = 0; i < WORD_LENGTH; i++) {
+      const currentLetter = currentTry.letters[i];
+      const gotCurrentLetter = currentLetter.text.toLowerCase();
+      const currentStoredState = this.currentLetterStates[gotCurrentLetter];
+      const targetState = states[i];
+
+      // This allows override state with better result.
+      // For example, if "A" was partial match in a previous try, and becomes full match in the current try, 
+      // we update the key state to the full match (because its enum value is larger).
+      if(currentStoredState == null || targetState > currentStoredState) {
+        this.currentLetterStates[gotCurrentLetter] = targetState;
+      } 
     }
     this.numberSubmittedTries++;
 

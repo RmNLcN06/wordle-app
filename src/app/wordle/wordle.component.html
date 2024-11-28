@@ -20,7 +20,7 @@
     </div>
     <div class="keyboard-container">
         <div [class]="['row' + i, 'row'].join(' ')" *ngFor="let row of keyboardRows; let i = index">
-            <div *ngFor="let key of row" class="key" [class.enter]="key === 'Enter'">
+            <div *ngFor="let key of row" [class]="getKeyClass(key)" [class.enter]="key === 'Enter'" (click)="handleClickKey(key)">
                 <div *ngIf="key !== 'Backspace'; else backspace">
                     {{key}}
                 </div>
